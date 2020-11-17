@@ -1,3 +1,7 @@
+# Copyright Cristian Lepore
+
+# Prepare the transaction - no send
+
 from algosdk import account, mnemonic
 from algosdk.v2client import algod
 
