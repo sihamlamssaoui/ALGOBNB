@@ -5,6 +5,7 @@
 from algosdk import account, mnemonic
 from algosdk.v2client import algod
 
+# Connect to client
 algod_address = "http://localhost:4001"
 algod_token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 algod_client = algod.AlgodClient(algod_token, algod_address)
