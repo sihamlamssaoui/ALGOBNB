@@ -1,6 +1,6 @@
 # Copyright Cristian Lepore
 
-# Transfer asset
+# Freeze an asset
 
 import json
 from algosdk import account, algod, mnemonic, transaction
@@ -47,25 +47,24 @@ print("Account 3 address: {}".format(accounts[3]['pk']))
 
 # copy in your assetID
 asset_id = (13168960)
-
-# transfer asset of 10 from account 1 to account 3
+# Freeze asset
+# The freeze address (Account 2) freezes Account 3's latinum holdings.
 data = {
-    "sender": accounts[1]['pk'],
+    "sender": accounts[2]['pk'],
     "fee": min_fee,
     "first": first,
     "last": last,
     "gh": gh,
-    "receiver": accounts[3]["pk"],
-    "amt": 10,
     "index": asset_id,
-    "flat_fee": True
+    "target": accounts[3]["pk"],
+    "new_freeze_state": True
 }
 
-# Transfer the transaction
-txn = transaction.AssetTransferTxn(**data)
+# Create the asset feeze transaction
+txn = transaction.AssetFreezeTxn(**data)
 
 # Sign the transaction
-stxn = txn.sign(accounts[1]['sk'])
+stxn = txn.sign(accounts[2]['sk'])
 
 # Utility function to wait for a transaction to be confirmed by network
 def wait_for_tx_confirmation(txid):
@@ -81,7 +80,7 @@ def wait_for_tx_confirmation(txid):
            last_round += 1
            algod_client.status_after_block(last_round)
 
-# Send transaction and print out information
+# Send freeze transaction
 txid = algod_client.send_transaction(stxn)
 print(txid)
 # Wait for the transaction to be confirmed
