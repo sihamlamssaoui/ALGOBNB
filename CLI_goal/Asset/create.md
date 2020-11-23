@@ -5,9 +5,15 @@
 We have the following account: PWBN75WEWPJE2FSNI6Q43RQQTP3U5AY2NRCO5MUA6HPOZLHYYUHLRRE26I
 
 Create a Reputation asset
-./goal asset create --asseturl "\Documents\Reputation_asset.txt" --creator PWBN75WEWPJE2FSNI6Q43RQQTP3U5AY2NRCO5MUA6HPOZLHYYUHLRRE26I --decimals 0 --name "Reputation" --note "2020-11-30" --total 1 --unitname REP --datadir data/ --wallet myWallet
+./goal asset create --asseturl "\Documents\Reputation_asset.txt" --creator CSMD7S3VQEKNDU5TVCGIXC5LVGDJNVWVYHZKWCFVPCTB4QDDHLKZIA2NFQ --decimals 0 --name "Reputation" --note "2020-11-20" --total 5 --unitname REP --note "Hello Cristian." --datadir data/ --wallet myWallet
+
+
+## Opt-in
+goal asset send -a 0 --assetid 13199564 -f AYP4BSSA4BYPUOBDRCL4WRSZCMVNPWZUXV7YMKCIEODGWF4D6EKZ35TQRU -t AYP4BSSA4BYPUOBDRCL4WRSZCMVNPWZUXV7YMKCIEODGWF4D6EKZ35TQRU --creator CSMD7S3VQEKNDU5TVCGIXC5LVGDJNVWVYHZKWCFVPCTB4QDDHLKZIA2NFQ -d data/
+
+## Transfer an asset
+goal asset send -a 1 --assetid 13199564 -f CSMD7S3VQEKNDU5TVCGIXC5LVGDJNVWVYHZKWCFVPCTB4QDDHLKZIA2NFQ -t AYP4BSSA4BYPUOBDRCL4WRSZCMVNPWZUXV7YMKCIEODGWF4D6EKZ35TQRU --creator CSMD7S3VQEKNDU5TVCGIXC5LVGDJNVWVYHZKWCFVPCTB4QDDHLKZIA2NFQ -d data/
 
 ## Manage asset
-
 We have created a second account BCQO4VC3HEFLRSSLQZGV4AZLWJZI6UCFSVB2GT6XVOJRY43EHVUNN6M5XY that manages the asset
 ./goal asset config --assetid 13171801 --creator PWBN75WEWPJE2FSNI6Q43RQQTP3U5AY2NRCO5MUA6HPOZLHYYUHLRRE26I --manager BCQO4VC3HEFLRSSLQZGV4AZLWJZI6UCFSVB2GT6XVOJRY43EHVUNN6M5XY --new-clawback "" --new-freezer "" --note "Reputation token" --datadir data/ --wallet myWallet
