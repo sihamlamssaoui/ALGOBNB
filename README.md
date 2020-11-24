@@ -2,7 +2,7 @@
 
 
 ## Create app
-$ goal app create --creator YJL5XKI4Y36NLQLPRQ3YQU4G2NOT2IHJ6MHLYGIPHZNUDLOGLTA44NVF4I  --approval-prog airbnb.teal  --global-byteslices 16 --global-ints 16 --local-byteslices 0 --local-ints 0 --app-arg "addr:7BHXE46DOOVFEMIHB7KSWJUY4UWTRVE4L5WIVXLHVXQWOCBPRA7EWFLPKU" --app-arg "int:300000" --app-arg "int:100000" --app-arg "int:100000" --app-arg "str:myparam" --app-arg "str:1" --app-arg "str:22" --clear-prog airbnb_clear.teal -d ~/node/testnet
+$ goal app create --creator YJL5XKI4Y36NLQLPRQ3YQU4G2NOT2IHJ6MHLYGIPHZNUDLOGLTA44NVF4I  --approval-prog airbnb.teal  --global-byteslices 16 --global-ints 16 --local-byteslices 0 --local-ints 0 --app-arg "addr:7BHXE46DOOVFEMIHB7KSWJUY4UWTRVE4L5WIVXLHVXQWOCBPRA7EWFLPKU" --app-arg "int:300000" --app-arg "int:100000" --app-arg "int:100000" --app-arg "str:1" --app-arg "str:22" --clear-prog airbnb_clear.teal -d ~/node/testnet
 
 -return APP_ID
 
