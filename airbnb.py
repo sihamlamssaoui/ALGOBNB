@@ -8,7 +8,6 @@ def contract_init():
 		App.globalPut(Bytes("Rent"), Btoi(Txn.application_args[1])),
 		App.globalPut(Bytes("H_deposit"), Btoi(Txn.application_args[2])),
 		App.globalPut(Bytes("G_deposit"), Btoi(Txn.application_args[3])),
-		App.globalPut(Bytes("myparam"), Txn.application_args[4]),
 		App.globalPut(Bytes("Begin_stay"), Btoi(Txn.application_args[5])),
         	App.globalPut(Bytes("End_stay"), Btoi(Txn.application_args[6])),
 		Return(Int(1))
@@ -48,70 +47,75 @@ def contract_init():
 		Return(And(
 		Gtxn[1].type_enum() == TxnType.Payment,
                 Gtxn[2].type_enum() == TxnType.Payment,
-        	#Gtxn[0].sender() == Gtxn[1].sender(),
-        	#Gtxn[2].close_remainder_to() == Global.zero_address(),
         	Gtxn[1].receiver() == App.globalGet(Bytes("Host")),
         	Gtxn[2].receiver() == App.globalGet(Bytes("Guest")),
         	Gtxn[1].amount() == Int(0),
-        	Gtxn[2].amount() == (App.globalGet(Bytes("Rent"))+ App.globalGet(Bytes("H_deposit")) + App.globalGet(Bytes("G_deposit"))) - Txn.fee())),
+        	Gtxn[2].amount() == (App.globalGet(Bytes("Rent"))+ App.globalGet(Bytes("H_deposit")) + App.globalGet(Bytes("G_deposit"))) - (Int(2)*Txn.fee()))),
 		Return(Int(0))
 		)
 
 	## Check if the Guest is legible to cancel
-	is_g_cancel = And(
-        	Global.round() > App.globalGet(Bytes("Begin_stay")),
-        	Global.round() < App.globalGet(Bytes("End_stay")),
-		Txn.sender() == App.globalGet(Bytes("Guest"))
-    		)
+	#is_g_cancel = And(
+        	#Global.round() > App.globalGet(Bytes("Begin_stay")),
+        	#Global.round() < App.globalGet(Bytes("End_stay")),
+		#Txn.sender() == App.globalGet(Bytes("Guest"))
+    		#)
+	is_g_cancel = Int(1)
 
 	## Guest want to cancel, if is_g_cancel is true we should do an atomic transfer to the host and the guest
 	g_cancel = If(is_g_cancel,
 		Return(And(
-		Gtxn[0].type_enum() == TxnType.Payment,
-        	Gtxn[0].sender() == Gtxn[1].sender(),
-        	Gtxn[0].close_remainder_to() == Global.zero_address(),
-        	Gtxn[0].receiver() == App.globalGet(Bytes("Host")),
-        	Gtxn[1].receiver() == App.globalGet(Bytes("Guest")),
-        	Gtxn[1].amount() == App.globalGet(Bytes("Rent")),
-        	Gtxn[0].amount() == App.globalGet(Bytes("H_deposit")) + App.globalGet(Bytes("G_deposit")))),
+		Gtxn[1].type_enum() == TxnType.Payment,
+		Gtxn[2].type_enum() == TxnType.Payment,
+        	Gtxn[1].receiver() == App.globalGet(Bytes("Host")),
+        	Gtxn[2].receiver() == App.globalGet(Bytes("Guest")),
+        	Gtxn[2].amount() == App.globalGet(Bytes("Rent"))-Txn.fee(),
+        	Gtxn[1].amount() == (App.globalGet(Bytes("H_deposit")) + App.globalGet(Bytes("G_deposit")))-Txn.fee())),
 		Return(And(
-        	Gtxn[0].sender() == Gtxn[1].sender(),
-        	Gtxn[0].close_remainder_to() == Global.zero_address(),
-        	Gtxn[0].receiver() == App.globalGet(Bytes("Host")),
-        	Gtxn[1].receiver() == App.globalGet(Bytes("Guest")),
-        	Gtxn[0].amount() == App.globalGet(Bytes("Rent")) /  Int(2) + App.globalGet(Bytes("H_deposit")),
-        	Gtxn[1].amount() == App.globalGet(Bytes("G_deposit"))
+		Gtxn[1].type_enum() == TxnType.Payment,
+		Gtxn[2].type_enum() == TxnType.Payment,
+        	Gtxn[1].receiver() == App.globalGet(Bytes("Host")),
+        	Gtxn[2].receiver() == App.globalGet(Bytes("Guest")),
+        	Gtxn[1].amount() == App.globalGet(Bytes("Rent")) /  Int(2) + App.globalGet(Bytes("H_deposit")) - Txn.fee(),
+        	Gtxn[2].amount() == App.globalGet(Bytes("G_deposit")) + App.globalGet(Bytes("Rent")) /  Int(2) - Txn.fee()
 		)))
  
 	## check if guest is in house
-	is_out_house = Int(1)
+	is_in_house = Int(1)
+	
+	in_house = If(is_in_house, 
+				Return(And(
+        			Gtxn[1].receiver() == App.globalGet(Bytes("Host")),
+        			Gtxn[1].amount() == App.globalGet(Bytes("Rent")) /  Int(2) - Txn.fee() 
+				)),
+				Return(Int(0)))
 	
 	complaint = Int(0)
 
 	## check if the grace period is ended and if there is any complaint
-	is_contract_ended = And(
+	#is_contract_ended = And(
 
-        	Global.round() >= App.globalGet(Bytes("End_stay")),
-		Txn.sender() == App.globalGet(Bytes("Host")), 
-		is_out_house
-    		)
+        	#Global.round() >= App.globalGet(Bytes("End_stay")),
+		#Txn.sender() == App.globalGet(Bytes("Host")), 
+		#is_in_house
+    		#)
+	is_contract_ended = Int(1)
 
 	## send the right amount from escrow account to host and guest based on is_contract_ended result
 	contract_ended = If(is_contract_ended, 
 				Return(And(
-        			Gtxn[0].sender() == Gtxn[1].sender(),
-        			Gtxn[0].close_remainder_to() == Global.zero_address(),
-        			Gtxn[0].receiver() == App.globalGet(Bytes("Host")),
-        			Gtxn[1].receiver() == App.globalGet(Bytes("Guest")),
-        			Gtxn[0].amount() == App.globalGet(Bytes("Rent")) /  Int(2) + App.globalGet(Bytes("H_deposit")),
-        			Gtxn[1].amount() == App.globalGet(Bytes("G_deposit")))),
+        			#Gtxn[0].sender() == Gtxn[1].sender(),
+        			#Gtxn[0].close_remainder_to() == Global.zero_address(),
+        			Gtxn[1].receiver() == App.globalGet(Bytes("Host")),
+        			Gtxn[2].receiver() == App.globalGet(Bytes("Guest")),
+        			Gtxn[1].amount() == App.globalGet(Bytes("Rent")) /  Int(2) + App.globalGet(Bytes("H_deposit")) - Txn.fee() ,
+        			Gtxn[2].amount() == App.globalGet(Bytes("G_deposit")) - Txn.fee() 
+				)),
 				Return(And(
-        			Gtxn[0].sender() == Gtxn[1].sender(),
-        			Gtxn[0].close_remainder_to() == Global.zero_address(),
-        			Gtxn[0].receiver() == App.globalGet(Bytes("Host")),
-        			Gtxn[1].receiver() == App.globalGet(Bytes("Guest")),
-        			Gtxn[0].amount() == App.globalGet(Bytes("Rent")) /  Int(2) + App.globalGet(Bytes("H_deposit")) + App.globalGet(Bytes("G_deposit")),
-        			Gtxn[1].amount() == Int(0))))
+        			Gtxn[1].receiver() == App.globalGet(Bytes("Host")),
+        			Gtxn[2].receiver() == App.globalGet(Bytes("Guest")),
+        			Gtxn[1].amount() == App.globalGet(Bytes("Rent")) /  Int(2) + App.globalGet(Bytes("H_deposit")) + App.globalGet(Bytes("G_deposit")) - Txn.fee(),
+        			Gtxn[1].amount() == Int(0) - Txn.fee() )))
 
 	is_update =If(Int(0) == Txn.application_id(), 
             App.globalPut(Bytes("Escrow"), Txn.application_args[0]), 
@@ -144,6 +148,7 @@ def contract_init():
 		[Bytes("send_g_deposit") == Txn.application_args[0], is_g_deposit],
 		[Bytes("host_cancel") == Txn.application_args[0], h_cancel],
 		[Bytes("guest_cancel") == Txn.application_args[0], g_cancel],
+                [Bytes("in_house") == Txn.application_args[0], in_house],
 		[Bytes("end_grace_period") == Txn.application_args[0], contract_ended],
         	)
 
