@@ -4,17 +4,16 @@
 
 import json
 from algosdk import account, algod, mnemonic, transaction
+from Utils.txn import wait_for_tx_confirmation
 
-mnemonic1 = "object dentist quit glory song vehicle inner receive spider cereal cabbage alpha shield dove process boil salon include pair keep essay armor solution abandon because"
-# mnemonic1 = "portion never forward pill lunch organ biology weird catch curve isolate plug innocent skin grunt bounce clown mercy hole eagle soul chunk type absorb trim"
-mnemonic2 = "place blouse sad pigeon wing warrior wild script problem team blouse camp soldier breeze twist mother vanish public glass code arrow execute convince ability there"
-mnemonic3 = "image travel claw climb bottom spot path roast century also task cherry address curious save item clean theme amateur loyal apart hybrid steak about blanket"
+mnemonic1 = "knock royal network goose trick filter credit engine phrase style inner cement wasp weasel scan comfort true jewel rally tuition man split wrong about theory"
+mnemonic2 = "oak window face eager organ large virus idea slide mad glance material strike holiday know prevent seven chimney vivid love credit foam fame ability sock"
 
 # For ease of reference, add account public and private keys to
 # an accounts dict.
 accounts = {}
 counter = 1
-for m in [mnemonic1, mnemonic2, mnemonic3]:
+for m in [mnemonic1, mnemonic2]:
     accounts[counter] = {}
     accounts[counter]['pk'] = mnemonic.to_public_key(m)
     accounts[counter]['sk'] = mnemonic.to_private_key(m)
@@ -38,7 +37,6 @@ min_fee = params.get("minFee")
 # Print the accounts
 print("Account 1 address: {}".format(accounts[1]['pk']))
 print("Account 2 address: {}".format(accounts[2]['pk']))
-print("Account 3 address: {}".format(accounts[3]['pk']))
 
 # Configure fields for creating the asset.
 # Account 1 creates an asset called latinum and sets Account 2 as the manager, reserve, freeze, and clawback address.
@@ -48,32 +46,18 @@ data = {
     "first": first,
     "last": last,
     "gh": gh,
-    "total": 1000,
+    "total": 1,
     "default_frozen": False,
-    "unit_name": "LATINUM",
-    "asset_name": "latinum",
+    "unit_name": "REP",
+    "asset_name": "Reputation",
     "manager": accounts[2]['pk'],
     "reserve": accounts[2]['pk'],
     "freeze": accounts[2]['pk'],
     "clawback": accounts[2]['pk'],
-    "url": "https://path/to/my/asset/details",
+    "url": "/Documents/Reputation_asset.txt",
     "flat_fee": True,
     "decimals": 0
 }
-
-# Utility function to wait for a transaction to be confirmed by network
-def wait_for_tx_confirmation(txid):
-   last_round = algod_client.status().get('lastRound')
-   while True:
-       txinfo = algod_client.pending_transaction_info(txid)
-       if txinfo.get('round') and txinfo.get('round') > 0:
-           print("Transaction {} confirmed in round {}.".format(
-               txid, txinfo.get('round')))
-           break
-       else:
-           print("Waiting for confirmation...")
-           last_round += 1
-           algod_client.status_after_block(last_round)
 
 # Construct Asset Creation transaction
 txn = transaction.AssetConfigTxn(**data)
@@ -86,7 +70,7 @@ txid = algod_client.send_transaction(stxn)
 print("Transaction ID = ", txid)
 
 # Wait for the transaction to be confirmed
-wait_for_tx_confirmation(txid)
+wait_for_tx_confirmation(algod_client, txid)
 
 try:
     # Pull account info for the creator
