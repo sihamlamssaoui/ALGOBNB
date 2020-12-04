@@ -6,7 +6,7 @@ import json
 from algosdk import account, algod, mnemonic, transaction
 from Utils.txn import wait_for_tx_confirmation
 
-mnemonic1 = "knock royal network goose trick filter credit engine phrase style inner cement wasp weasel scan comfort true jewel rally tuition man split wrong about theory"
+mnemonic1 = "delay lawsuit ladder silly parrot system treat save speak business sheriff brand cave hole churn shy eternal civil fix mother attitude employ canyon absorb biology"
 mnemonic2 = "oak window face eager organ large virus idea slide mad glance material strike holiday know prevent seven chimney vivid love credit foam fame ability sock"
 
 # For ease of reference, add account public and private keys to
