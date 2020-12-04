@@ -42,17 +42,6 @@ min_fee = params.get("minFee")
 
 asset_id = 13255544;
 
-"""
-txn = AssetConfigTxn(
-    sender=accounts[2]['pk'],
-    sp=params,
-    index=asset_id,
-    manager=accounts[1]['pk'],
-    reserve=accounts[2]['pk'],
-    freeze=accounts[2]['pk'],
-    clawback=accounts[2]['pk'])
-"""
-
 # Configure fields for creating the asset.
 # Account 1 creates an asset called latinum and sets Account 2 as the manager, reserve, freeze, and clawback address.
 data = {
