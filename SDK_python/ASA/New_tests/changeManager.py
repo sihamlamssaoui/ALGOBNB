@@ -32,16 +32,50 @@ algod_client = algod.AlgodClient(algod_token, algod_address)
 # Keep reserve, freeze, and clawback address same as before, i.e. account 2
 params = algod_client.suggested_params()
 
+# Get network params for transactions.
+params = algod_client.suggested_params()
+first = params.get("lastRound")
+last = first + 1000
+gen = params.get("genesisID")
+gh = params.get("genesishashb64")
+min_fee = params.get("minFee")
+
 asset_id = 13255544;
 
+"""
 txn = AssetConfigTxn(
     sender=accounts[2]['pk'],
     sp=params,
-    index=asset_id, 
+    index=asset_id,
     manager=accounts[1]['pk'],
     reserve=accounts[2]['pk'],
     freeze=accounts[2]['pk'],
     clawback=accounts[2]['pk'])
+"""
+
+# Configure fields for creating the asset.
+# Account 1 creates an asset called latinum and sets Account 2 as the manager, reserve, freeze, and clawback address.
+data = {
+    "sender": accounts[2]['pk'],
+    "fee": min_fee,
+    "first": first,
+    "last": last,
+    "gh": gh,
+    "total": 1,
+    "default_frozen": False,
+    "unit_name": "REP",
+    "asset_name": "Reputation",
+    "manager": accounts[2]['pk'],
+    "reserve": accounts[2]['pk'],
+    "freeze": accounts[2]['pk'],
+    "clawback": accounts[2]['pk'],
+    "url": "/Documents/Reputation_asset.txt",
+    "flat_fee": True,
+    "decimals": 0
+}
+
+# Construct Asset Creation transaction
+txn = transaction.AssetConfigTxn(**data)
 
 # sign by the current manager - Account 2
 stxn = txn.sign(accounts[2]['sk'])
@@ -49,7 +83,4 @@ txid = algod_client.send_transaction(stxn)
 print(txid)
 
 # Wait for the transaction to be confirmed
-wait_for_confirmation(algod_client, txid)
-
-# Check asset info to view change in management. manager should now be account 1
-print_created_asset(algod_client, accounts[1]['pk'], asset_id)
+wait_for_tx_confirmation(algod_client, txid)
