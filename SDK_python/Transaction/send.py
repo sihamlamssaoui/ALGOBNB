@@ -12,7 +12,7 @@ algod_token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 algod_client = algod.AlgodClient(algod_token, algod_address)
 
 # Substitute with your own passphrase.
-passphrase = "tongue parent ginger trim upper card egg music sting merge wine hurry joke size leave volume siege juice sudden face scheme two okay abandon medal"
+passphrase = "bring educate drift rally oblige benefit crush task lunar solar grief license mercy tribe pole divorce blur donkey august impulse shed knife crime able name"
 
 # Check your balance
 private_key = mnemonic.to_private_key(passphrase)
@@ -24,11 +24,13 @@ print("Account balance: {} microAlgos".format(account_info.get('amount')))
 
 # Construct the transaction
 params = algod_client.suggested_params()
+
 # Set you own fee
 params.flat_fee = True
 params.fee = 1000
+
 # Set receiver
-receiver = "GD64YIY3TWGDMCNPP553DZPPR6LDUSFQOIJVFDPPXWEG3FVOJCCDBBHU5A"
+receiver = "YFXXOAHHJF2X7ASJ5DO2E2ZG3NRKHV4W2UTXOMWL5LWINQNEBVLPOZBZNM"
 note = "Hello World".encode()
 
 # Prepare an unsigned transaction

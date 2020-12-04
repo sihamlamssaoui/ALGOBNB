@@ -6,16 +6,15 @@ import json
 from algosdk import account, algod, mnemonic, transaction
 from Utils.txn import wait_for_tx_confirmation
 
-mnemonic1 = "knock royal network goose trick filter credit engine phrase style inner cement wasp weasel scan comfort true jewel rally tuition man split wrong about theory"
-mnemonic2 = "oak window face eager organ large virus idea slide mad glance material strike holiday know prevent seven chimney vivid love credit foam fame ability sock"
-mnemonic3 = "trick physical cargo middle toy tennis benefit answer frame balance tuition outdoor record force bubble original club off school sound tail wealth husband abandon prize"
-mnemonic4 = "cause input waste observe first someone neither exhaust napkin mesh zone purpose seed property bomb output response age fancy across grid kite consider ability vicious"
+mnemonic1 = "bring educate drift rally oblige benefit crush task lunar solar grief license mercy tribe pole divorce blur donkey august impulse shed knife crime able name"
+mnemonic2 = "bomb leisure human gasp ripple sea flavor stove limit vessel gift poverty catalog equip umbrella actor glimpse protect rice idea style polar survey about carbon"
+mnemonic3 = "hamster spy moment silly source decade proof utility pond sweet whale select meadow stem liquid appear way belt oblige caught clarify provide end about calm"
 
 # For ease of reference, add account public and private keys to
 # an accounts dict.
 accounts = {}
 counter = 1
-for m in [mnemonic1, mnemonic2, mnemonic3, mnemonic4]:
+for m in [mnemonic1, mnemonic2, mnemonic3]:
     accounts[counter] = {}
     accounts[counter]['pk'] = mnemonic.to_public_key(m)
     accounts[counter]['sk'] = mnemonic.to_private_key(m)
@@ -40,10 +39,9 @@ min_fee = params.get("minFee")
 print("Account 1 address: {}".format(accounts[1]['pk']))
 print("Account 2 address: {}".format(accounts[2]['pk']))
 print("Account 3 address: {}".format(accounts[3]['pk']))
-print("Account 4 address: {}".format(accounts[4]['pk']))
 
 # copy in your assetID
-asset_id = (13256775)
+asset_id = (13257610)
 
 # transfer asset of 10 from account 1 to account 3
 data = {
@@ -52,8 +50,8 @@ data = {
     "first": first,
     "last": last,
     "gh": gh,
-    "receiver": accounts[4]["pk"],
-    "amt": 0,
+    "receiver": accounts[1]["pk"],
+    "amt": 1,
     "index": asset_id,
     "flat_fee": True
 }
@@ -73,4 +71,3 @@ wait_for_tx_confirmation(algod_client, txid)
 
 # The balance should now be 10.
 account_info = algod_client.account_info(accounts[3]['pk'])
-print(json.dumps(account_info['assets'][str(asset_id)], indent=4))

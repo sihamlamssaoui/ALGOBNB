@@ -6,8 +6,9 @@ import json
 from algosdk import account, algod, mnemonic, transaction
 from Utils.txn import wait_for_tx_confirmation
 
-mnemonic1 = "delay lawsuit ladder silly parrot system treat save speak business sheriff brand cave hole churn shy eternal civil fix mother attitude employ canyon absorb biology"
-mnemonic2 = "oak window face eager organ large virus idea slide mad glance material strike holiday know prevent seven chimney vivid love credit foam fame ability sock"
+mnemonic1 = "canvas taste surround student width thunder engine civil chief they game iron fitness nature intact buyer badge apology attend gold unknown great toddler ability segment"
+mnemonic2 = "bomb leisure human gasp ripple sea flavor stove limit vessel gift poverty catalog equip umbrella actor glimpse protect rice idea style polar survey about carbon"
+mnemonic3 = "hamster spy moment silly source decade proof utility pond sweet whale select meadow stem liquid appear way belt oblige caught clarify provide end about calm"
 
 # For ease of reference, add account public and private keys to
 # an accounts dict.
@@ -50,10 +51,10 @@ data = {
     "default_frozen": False,
     "unit_name": "REP",
     "asset_name": "Reputation",
-    "manager": accounts[2]['pk'],
-    "reserve": accounts[2]['pk'],
-    "freeze": accounts[2]['pk'],
-    "clawback": accounts[2]['pk'],
+    "manager": accounts[1]['pk'],
+    "reserve": accounts[1]['pk'],
+    "freeze": accounts[1]['pk'],
+    "clawback": accounts[1]['pk'],
     "url": "/Documents/Reputation_asset.txt",
     "flat_fee": True,
     "decimals": 0

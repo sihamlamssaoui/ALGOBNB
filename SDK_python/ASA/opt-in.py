@@ -12,16 +12,15 @@ from Utils.txn import wait_for_tx_confirmation
 # mnemonic2 = "PASTE your phrase for account 2"
 # mnemonic3 = "PASTE your phrase for account 3"
 
-mnemonic1 = "knock royal network goose trick filter credit engine phrase style inner cement wasp weasel scan comfort true jewel rally tuition man split wrong about theory"
-mnemonic2 = "oak window face eager organ large virus idea slide mad glance material strike holiday know prevent seven chimney vivid love credit foam fame ability sock"
-mnemonic3 = "trick physical cargo middle toy tennis benefit answer frame balance tuition outdoor record force bubble original club off school sound tail wealth husband abandon prize"
-mnemonic4 = "cause input waste observe first someone neither exhaust napkin mesh zone purpose seed property bomb output response age fancy across grid kite consider ability vicious"
+mnemonic1 = "canvas taste surround student width thunder engine civil chief they game iron fitness nature intact buyer badge apology attend gold unknown great toddler ability segment"
+mnemonic2 = "smile injury carbon avocado time miss fold hurdle diagram ribbon divert excuse bird dawn casino foot chunk soda place appear zoo fly settle absent minute"
+mnemonic3 = "hamster spy moment silly source decade proof utility pond sweet whale select meadow stem liquid appear way belt oblige caught clarify provide end about calm"
 
 # For ease of reference, add account public and private keys to
 # an accounts dict.
 accounts = {}
 counter = 1
-for m in [mnemonic1, mnemonic2, mnemonic3, mnemonic4]:
+for m in [mnemonic1, mnemonic2, mnemonic3]:
     accounts[counter] = {}
     accounts[counter]['pk'] = mnemonic.to_public_key(m)
     accounts[counter]['sk'] = mnemonic.to_private_key(m)
@@ -46,25 +45,30 @@ min_fee = params.get("minFee")
 print("Account 1 address: {}".format(accounts[1]['pk']))
 print("Account 2 address: {}".format(accounts[2]['pk']))
 print("Account 3 address: {}".format(accounts[3]['pk']))
-print("Account 4 address: {}".format(accounts[4]['pk']))
 
 # copy in your assetID
-asset_id = (13256775)
+asset_id = (13258381)
 # Check if asset_id is in account 3's asset holdings prior to opt-in
-account_info = algod_client.account_info(accounts[4]['pk'])
+account_info = algod_client.account_info(accounts[1]['pk'])
 holding = None
-if 'assets' in account_info:
-    holding = account_info['assets'].get(str(asset_id))
+idx = 0
+
+for my_account_info in account_info['assets']:
+    scrutinized_asset = account_info['assets'][idx]
+    idx = idx + 1    
+    if (scrutinized_asset['asset-id'] == asset_id):
+        holding = True
+        break
 
 if not holding:
     # Get latest network parameters
     data = {
-        "sender": accounts[4]['pk'],
+        "sender": accounts[2]['pk'],
         "fee": min_fee,
         "first": first,
         "last": last,
         "gh": gh,
-        "receiver": accounts[3]["pk"],
+        "receiver": accounts[1]["pk"],
         "amt": 0,
         "index": asset_id,
         "flat_fee": True
@@ -74,7 +78,7 @@ if not holding:
 txn = transaction.AssetTransferTxn(**data)
 
 # Sign the transaction
-stxn = txn.sign(accounts[4]['sk'])
+stxn = txn.sign(accounts[2]['sk'])
 
 txid = algod_client.send_transaction(stxn)
 print(txid)
@@ -85,4 +89,3 @@ wait_for_tx_confirmation(algod_client, txid)
 # Now check the asset holding for that account.
 # This should now show a holding with a balance of 0.
 account_info = algod_client.account_info(accounts[3]['pk'])
-print(json.dumps(account_info['assets'][str(asset_id)], indent=4))
