@@ -1,6 +1,7 @@
 # dAirBnB
 
 ## Test
+The next is a sequence of steps to unfreeze / pay / freeze an asset in a single atoic transfer.
 
 goal asset create --creator YCVEJYJ2BM3XN7IXSQ4Z44TR4V6KNO5DEJ3Z7SP5FW3EXKLPKKPWH4FXSY --decimals 0 --name "Reputation"  --total 1 --unitname REP --asseturl "\Documents\Reputation_asset.txt" -d data/
 
