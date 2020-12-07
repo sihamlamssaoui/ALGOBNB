@@ -38,28 +38,3 @@ with open('asa.teal', 'w') as f:
 with open('asa_clear.teal', 'w') as f:
         compiled = compileTeal(clear_state_program(), Mode.Application)
         f.write(compiled)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

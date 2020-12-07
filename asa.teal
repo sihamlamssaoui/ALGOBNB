@@ -3,64 +3,8 @@ txn ApplicationID
 int 0
 ==
 bnz l0
-txn OnCompletion
-int DeleteApplication
-==
-bnz l1
-txn OnCompletion
-int UpdateApplication
-==
-bnz l2
-txn OnCompletion
-int CloseOut
-==
-bnz l3
-txn OnCompletion
-int OptIn
-==
-bnz l4
-txn OnCompletion
-int ClearState
-==
-bnz l5
-txna ApplicationArgs 0
-byte "asa_allowed_address"
-==
-bnz l6
 err
 l0:
 int 1
 return
-b l7
 l1:
-int 1
-return
-b l7
-l2:
-int 1
-return
-b l7
-l3:
-int 1
-return
-b l7
-l4:
-int 0
-byte "address"
-txn Sender
-app_local_put
-int 1
-return
-b l7
-l5:
-int 1
-return
-b l7
-l6:
-load 0
-load 1
-gtxn 1 Sender
-==
-&&
-return
-l7:
