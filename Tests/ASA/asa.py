@@ -2,16 +2,11 @@ from pyteal import *
 
 def initial_approval_program():
     on_creation = Return(Int(1))
-    
     on_deletion = Return(Int(1))
-    
     on_update = Return(Int(1))
-    
     on_closeout = Return(Int(1))
-
     on_optin = Seq([App.localPut(Int(0), Bytes("address"), Txn.sender()),
 		Return(Int(1))])
-
     on_clear = Return(Int(1))
 
     get_address_of_sender = App.localGetEx(Int(0), App.id(), Bytes("address"))
