@@ -1,0 +1,379 @@
+#pragma version 2
+txn ApplicationID
+int 0
+==
+bnz l0
+txn OnCompletion
+int DeleteApplication
+==
+bnz l1
+txn OnCompletion
+int UpdateApplication
+==
+bnz l2
+txn OnCompletion
+int CloseOut
+==
+bnz l3
+txn OnCompletion
+int OptIn
+==
+bnz l4
+byte "send_rent"
+txna ApplicationArgs 0
+==
+bnz l5
+byte "send_h_deposit"
+txna ApplicationArgs 0
+==
+bnz l6
+byte "send_g_deposit"
+txna ApplicationArgs 0
+==
+bnz l7
+byte "host_cancel"
+txna ApplicationArgs 0
+==
+bnz l8
+byte "guest_cancel"
+txna ApplicationArgs 0
+==
+bnz l9
+byte "in_house"
+txna ApplicationArgs 0
+==
+bnz l10
+byte "end_grace_period"
+txna ApplicationArgs 0
+==
+bnz l11
+err
+l0:
+byte "Host"
+txn Sender
+app_global_put
+txn NumAppArgs
+int 7
+==
+bnz l13
+err
+l13:
+byte "Guest"
+txna ApplicationArgs 0
+app_global_put
+byte "Rent"
+txna ApplicationArgs 1
+btoi
+app_global_put
+byte "H_deposit"
+txna ApplicationArgs 2
+btoi
+app_global_put
+byte "G_deposit"
+txna ApplicationArgs 3
+btoi
+app_global_put
+byte "Begin_stay"
+txna ApplicationArgs 5
+btoi
+app_global_put
+byte "End_stay"
+txna ApplicationArgs 6
+btoi
+app_global_put
+int 1
+return
+b l12
+l1:
+int 1
+return
+b l12
+l2:
+int 0
+txn ApplicationID
+==
+bnz l14
+int 1
+return
+b l15
+l14:
+byte "Escrow"
+txna ApplicationArgs 0
+app_global_put
+l15:
+b l12
+l3:
+txn Sender
+byte "Host"
+app_global_get
+==
+global Round
+byte "End_stay"
+app_global_get
+>
+&&
+bz l16
+int 1
+return
+l16:
+b l12
+l4:
+int 1
+return
+b l12
+l5:
+gtxn 1 Sender
+byte "Guest"
+app_global_get
+==
+gtxn 1 Amount
+byte "Rent"
+app_global_get
+==
+&&
+return
+b l12
+l6:
+gtxn 1 Sender
+byte "Host"
+app_global_get
+==
+gtxn 1 Amount
+byte "H_deposit"
+app_global_get
+==
+&&
+return
+b l12
+l7:
+gtxn 1 Sender
+byte "Guest"
+app_global_get
+==
+gtxn 1 Amount
+byte "G_deposit"
+app_global_get
+==
+&&
+return
+b l12
+l8:
+int 1
+bnz l17
+int 0
+return
+b l18
+l17:
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 2 TypeEnum
+int pay
+==
+&&
+gtxn 1 Receiver
+byte "Host"
+app_global_get
+==
+&&
+gtxn 2 Receiver
+byte "Guest"
+app_global_get
+==
+&&
+gtxn 1 Amount
+int 0
+==
+&&
+gtxn 2 Amount
+byte "Rent"
+app_global_get
+byte "H_deposit"
+app_global_get
++
+byte "G_deposit"
+app_global_get
++
+int 2
+txn Fee
+*
+-
+==
+&&
+return
+l18:
+b l12
+l9:
+int 1
+bnz l19
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 2 TypeEnum
+int pay
+==
+&&
+gtxn 1 Receiver
+byte "Host"
+app_global_get
+==
+&&
+gtxn 2 Receiver
+byte "Guest"
+app_global_get
+==
+&&
+gtxn 1 Amount
+byte "Rent"
+app_global_get
+int 2
+/
+byte "H_deposit"
+app_global_get
++
+txn Fee
+-
+==
+&&
+gtxn 2 Amount
+byte "G_deposit"
+app_global_get
+byte "Rent"
+app_global_get
+int 2
+/
++
+txn Fee
+-
+==
+&&
+return
+b l20
+l19:
+gtxn 1 TypeEnum
+int pay
+==
+gtxn 2 TypeEnum
+int pay
+==
+&&
+gtxn 1 Receiver
+byte "Host"
+app_global_get
+==
+&&
+gtxn 2 Receiver
+byte "Guest"
+app_global_get
+==
+&&
+gtxn 2 Amount
+byte "Rent"
+app_global_get
+txn Fee
+-
+==
+&&
+gtxn 1 Amount
+byte "H_deposit"
+app_global_get
+byte "G_deposit"
+app_global_get
++
+txn Fee
+-
+==
+&&
+return
+l20:
+b l12
+l10:
+int 1
+bnz l21
+int 0
+return
+b l22
+l21:
+gtxn 1 Receiver
+byte "Host"
+app_global_get
+==
+gtxn 1 Amount
+byte "Rent"
+app_global_get
+int 2
+/
+txn Fee
+-
+==
+&&
+return
+l22:
+b l12
+l11:
+int 1
+bnz l23
+gtxn 1 Receiver
+byte "Host"
+app_global_get
+==
+gtxn 2 Receiver
+byte "Guest"
+app_global_get
+==
+&&
+gtxn 1 Amount
+byte "Rent"
+app_global_get
+int 2
+/
+byte "H_deposit"
+app_global_get
++
+byte "G_deposit"
+app_global_get
++
+txn Fee
+-
+==
+&&
+gtxn 1 Amount
+int 0
+txn Fee
+-
+==
+&&
+return
+b l24
+l23:
+gtxn 1 Receiver
+byte "Host"
+app_global_get
+==
+gtxn 2 Receiver
+byte "Guest"
+app_global_get
+==
+&&
+gtxn 1 Amount
+byte "Rent"
+app_global_get
+int 2
+/
+byte "H_deposit"
+app_global_get
++
+txn Fee
+-
+==
+&&
+gtxn 2 Amount
+byte "G_deposit"
+app_global_get
+txn Fee
+-
+==
+&&
+return
+l24:
+l12:
