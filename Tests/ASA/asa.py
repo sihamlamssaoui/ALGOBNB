@@ -6,10 +6,13 @@ def initial_approval_program():
     on_deletion = Return(Int(1))
     on_update = Return(Int(1))
     on_closeout = Return(Int(1))
-
     on_optin = Seq([App.localPut(Int(0), Bytes("address"), Txn.sender()),
+<<<<<<< HEAD
                     Return(Int(1))])
 
+=======
+		Return(Int(1))])
+>>>>>>> 48939d92e4ebc0ef8c72b5b7ffe19a43e01ab936
     on_clear = Return(Int(1))
 
     get_address_of_sender = App.localGetEx(Int(0), App.id(), Bytes("address"))
@@ -40,5 +43,10 @@ with open('asa.teal', 'w') as f:
     f.write(compiled)
 
 with open('asa_clear.teal', 'w') as f:
+<<<<<<< HEAD
     compiled = compileTeal(clear_state_program(), Mode.Application)
     f.write(compiled)
+=======
+        compiled = compileTeal(clear_state_program(), Mode.Application)
+        f.write(compiled)
+>>>>>>> 48939d92e4ebc0ef8c72b5b7ffe19a43e01ab936

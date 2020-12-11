@@ -2,7 +2,11 @@
 
 ## create asset using goal:
 
+<<<<<<< HEAD
 Create ASA:\
+=======
+Create ASA\
+>>>>>>> 48939d92e4ebc0ef8c72b5b7ffe19a43e01ab936
 goal asset create --creator A62HUFIM4MLPWN6USRM2FJBHQG6CN3NKQ4T2MOKAO3TL47NDWVKYY3KV2I --decimals 0 --name "Reputation"  --total 1 --unitname REP --asseturl "\Documents\Reputation_asset.txt" -d ~/node/testnet
 
 ---
